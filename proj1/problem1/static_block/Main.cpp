@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Wed Apr 02 2025                                              *
+** Last Modified: Thu Apr 03 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -17,8 +17,11 @@
 ** ----------	---	---------------------------------------------------------  *
 */
 
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
+#include <tuple>
+#include <vector>
 #include "Clock.hpp"
 #include "PrimeChecker.hpp"
 #include "StaticBlockThread.hpp"
@@ -31,13 +34,23 @@ int main(const int argc, const char **argv)
     int NUM_END = BASE_NUM_END; // default input
     int NUM_THREADS = 1;        // default number of threads
     Shared::Clock clock;
+    std::vector<std::tuple<int, int>> _threadsRanges;
 
     if (argc == 3) {
         NUM_END = atoi(argv[1]);
         NUM_THREADS = atoi(argv[2]);
     }
 
-    Shared::ThreadPool<StaticBlock::StaticBlockThread> threadPool(NUM_THREADS, NUM_END);
+    int range = NUM_END / NUM_THREADS;
+
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        int startNbr = i * range;
+        int endNbr = ((i + 1) * range) - 1;
+
+        _threadsRanges.emplace_back(startNbr, endNbr);
+    }
+
+    Shared::ThreadPool<StaticBlock::StaticBlockThread> threadPool(NUM_THREADS, std::move(_threadsRanges));
 
     clock.start();
 

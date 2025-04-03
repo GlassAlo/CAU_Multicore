@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Wed Apr 02 2025                                              *
+** Last Modified: Thu Apr 03 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -34,17 +34,26 @@ namespace Shared {
             int _numThreads;
             std::vector<T> _threads;
 
+            template<typename Arg>
+            void createOneThread(int idx, Arg &&arg)
+            {
+                _threads.emplace_back(T(idx, std::forward<Arg>(arg)));
+            }
+
         public:
-            explicit ThreadPool(int numThreads, int endNbr)
+            template<typename Container>
+            explicit ThreadPool(int numThreads, Container &&argsContainer)
                 : _numThreads(numThreads)
             {
-                int range = endNbr / numThreads;
+                auto tmp = std::forward<Container>(argsContainer);
+                _threads.reserve(numThreads);
+                auto itx = std::begin(tmp);
 
-                for (int i = 0; i < numThreads; ++i) {
-                    int startNbr = i * range;
-                    int endNbr = ((i + 1) * range) - 1;
-
-                    _threads.emplace_back(T(i, startNbr, endNbr));
+                for (int i = 0; i < numThreads; ++i, itx++) {
+                    if (itx == std::end(tmp)) {
+                        throw std::runtime_error("Not enough arguments in container!");
+                    }
+                    createOneThread(i, *itx);
                 }
             }
 

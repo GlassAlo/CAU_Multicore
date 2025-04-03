@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Wed Apr 02 2025                                              *
+** Last Modified: Thu Apr 03 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -21,14 +21,18 @@
 #include "PrimeChecker.hpp"
 
 namespace StaticBlock {
-    StaticBlockThread::StaticBlockThread(int idx, int startNbr, int endNbr)
-        : Shared::Thread(idx),
-          _startNbr(startNbr),
-          _endNbr(endNbr)
-    {}
+    StaticBlockThread::StaticBlockThread(int idx, std::tuple<int, int> &aArgs)
+        : Shared::Thread(idx)
+    {
+        auto tmp = std::move(aArgs);
+
+        _startNbr = std::get<0>(tmp);
+        _endNbr = std::get<1>(tmp);
+    }
 
     void StaticBlockThread::run()
     {
+        std::cout << "Thread " << _idx << " Start: " << _startNbr << " End: " << _endNbr << "\n";
         _clock.start();
 
         Shared::PrimeChecker &primeChecker = Shared::PrimeChecker::getInstance();

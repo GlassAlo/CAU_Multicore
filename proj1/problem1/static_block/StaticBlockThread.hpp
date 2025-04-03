@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Wed Apr 02 2025                                              *
+** Last Modified: Thu Apr 03 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -29,8 +29,13 @@ namespace StaticBlock {
             int _endNbr;
 
         public:
-            StaticBlockThread(int idx, int startNbr, int endNbr);
+            StaticBlockThread(int idx, std::tuple<int, int> &Args);
             ~StaticBlockThread() override = default;
+
+            StaticBlockThread(const StaticBlockThread &) = default;
+            StaticBlockThread(StaticBlockThread &&) noexcept = default;
+            auto operator=(const StaticBlockThread &) -> StaticBlockThread & = default;
+            auto operator=(StaticBlockThread &&) noexcept -> StaticBlockThread & = default;
 
             void run() override;
     };
