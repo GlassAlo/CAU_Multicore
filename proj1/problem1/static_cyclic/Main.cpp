@@ -24,34 +24,35 @@
 #include <vector>
 #include "Clock.hpp"
 #include "PrimeChecker.hpp"
-#include "StaticBlockThread.hpp"
+#include "StaticCyclicThread.hpp"
 #include "ThreadPool.hpp"
 
 constexpr int BASE_NUM_END = 200000;
 constexpr int BASE_NUM_THREADS = 1;
+constexpr int STEPS = 10;
 
 int main(const int argc, const char **argv)
 {
     int NUM_END = BASE_NUM_END;         // default input
     int NUM_THREADS = BASE_NUM_THREADS; // default number of threads
     Shared::Clock clock;
-    std::vector<std::tuple<int, int>> threadsRanges;
 
     if (argc == 3) {
         NUM_END = atoi(argv[1]);
         NUM_THREADS = atoi(argv[2]);
     }
+    int nbrOfRanges = NUM_END / STEPS;
+    std::vector<std::vector<std::tuple<int, int>>> threadsRanges(NUM_THREADS);
 
-    int range = NUM_END / NUM_THREADS;
+    for (int i = 0; i < nbrOfRanges; i++) {
+        int startNbr = i * STEPS;
+        int endNbr = ((i + 1) * STEPS) - 1;
+        std::tuple<int, int> range = std::make_tuple(startNbr, endNbr);
 
-    for (int i = 0; i < NUM_THREADS; ++i) {
-        int startNbr = i * range;
-        int endNbr = ((i + 1) * range) - 1;
-
-        threadsRanges.emplace_back(startNbr, endNbr);
+        threadsRanges[i % NUM_THREADS].push_back(range);
     }
 
-    Shared::ThreadPool<StaticBlock::StaticBlockThread> threadPool(NUM_THREADS, std::move(threadsRanges));
+    Shared::ThreadPool<StaticCyclic::StaticCyclicThread> threadPool(NUM_THREADS, std::move(threadsRanges));
 
     clock.start();
 
