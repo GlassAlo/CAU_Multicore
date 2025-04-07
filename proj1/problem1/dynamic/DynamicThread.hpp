@@ -1,7 +1,7 @@
 /*
-** File: PrimeChecker.hpp                                                      *
-** Project: static_block                                                       *
-** Created Date: We Apr 2025                                                   *
+** File: DynamicThread.hpp                                                *
+** Project: dynamic                                                      *
+** Created Date: Th Apr 2025                                                   *
 ** Author: GlassAlo                                                            *
 ** Email: ofourpatat@gmail.com                                                 *
 ** -----                                                                       *
@@ -19,31 +19,26 @@
 
 #pragma once
 
-#include <mutex>
-#include <thread>
+#include <functional>
+#include <vector>
+#include "Thread.hpp"
+#include "WorkQueue.hpp"
 
-namespace Shared {
-    class PrimeChecker
+namespace Dynamic {
+    class DynamicThread : public Shared::Thread
     {
         private:
-            int _counter;
-            std::mutex _counterMutex;
-            PrimeChecker();
+            std::reference_wrapper<WorkQueue> _workQueue;
 
         public:
-            static auto getInstance() -> PrimeChecker &;
+            explicit DynamicThread(int idx, WorkQueue &workQueue);
+            ~DynamicThread() override = default;
 
-            PrimeChecker(const PrimeChecker &) = delete;
-            PrimeChecker(PrimeChecker &&) = delete;
-            auto operator=(const PrimeChecker &) -> PrimeChecker & = delete;
-            auto operator=(PrimeChecker &&) -> PrimeChecker & = delete;
+            DynamicThread(const DynamicThread &) = default;
+            DynamicThread(DynamicThread &&) noexcept = default;
+            auto operator=(const DynamicThread &) -> DynamicThread & = default;
+            auto operator=(DynamicThread &&) noexcept -> DynamicThread & = default;
 
-            ~PrimeChecker() = default;
-
-            auto incrementCounter(int &aToAdd) -> void;
-            [[nodiscard]] auto getCounter() const -> int;
-
-            // Function to check if a number is prime
-            static auto isPrime(int aNumber) -> bool;
+            void run() override;
     };
-} // namespace Shared
+} // namespace Dynamic

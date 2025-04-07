@@ -1,5 +1,5 @@
--- Create the problem1-static-cyclic project
-target("problem1-static-cyclic")
+-- Create the problem1-dynamic project
+target("problem1-dynamic")
 
     -- Set the project kind to binary
     set_kind("binary")

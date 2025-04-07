@@ -1,6 +1,6 @@
 /*
-** File: StaticCyclicThread.cpp                                                *
-** Project: static_cyclic                                                      *
+** File: WorkQueue.cpp                                                         *
+** Project: dynamic                                                            *
 ** Created Date: Th Apr 2025                                                   *
 ** Author: GlassAlo                                                            *
 ** Email: ofourpatat@gmail.com                                                 *
@@ -17,36 +17,23 @@
 ** ----------	---	---------------------------------------------------------  *
 */
 
-#include "StaticCyclicThread.hpp"
-#include <syncstream>
-#include "PrimeChecker.hpp"
+#include "WorkQueue.hpp"
 
-namespace StaticCyclic {
-    StaticCyclicThread::StaticCyclicThread(int idx, std::vector<std::tuple<int, int>> &aArgs)
-        : Shared::Thread(idx),
-          _ranges(std::move(aArgs))
-    {}
-
-    void StaticCyclicThread::run()
+namespace Dynamic {
+    void WorkQueue::push(std::tuple<int, int> range)
     {
-        _clock.start();
-
-        Shared::PrimeChecker &primeChecker = Shared::PrimeChecker::getInstance();
-        int counter = 0;
-
-        for (const auto &[startNbr, endNbr] : _ranges) {
-            for (int i = startNbr; i <= endNbr; i++) {
-                if (primeChecker.isPrime(i)) {
-                    counter++;
-                }
-            }
-        }
-
-        primeChecker.incrementCounter(counter);
-
-        auto elapsedTimeInMs = _clock.getElapsedTime();
-
-        std::osyncstream(std::cout) << "Thread " << _idx << " Execution Time: " << elapsedTimeInMs << " ms"
-                                    << "\n";
+        std::lock_guard<std::mutex> lock(_mutex);
+        _workQueue.push(range);
     }
-} // namespace StaticCyclic
+
+    auto WorkQueue::pop(std::tuple<int, int> &range) -> bool
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        if (_workQueue.empty()) {
+            return false;
+        }
+        range = _workQueue.front();
+        _workQueue.pop();
+        return true;
+    }
+} // namespace Dynamic

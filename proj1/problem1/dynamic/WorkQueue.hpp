@@ -1,7 +1,7 @@
 /*
-** File: PrimeChecker.hpp                                                      *
-** Project: static_block                                                       *
-** Created Date: We Apr 2025                                                   *
+** File: WorkQueue.hpp                                                         *
+** Project: dynamic                                                            *
+** Created Date: Th Apr 2025                                                   *
 ** Author: GlassAlo                                                            *
 ** Email: ofourpatat@gmail.com                                                 *
 ** -----                                                                       *
@@ -20,30 +20,25 @@
 #pragma once
 
 #include <mutex>
-#include <thread>
+#include <queue>
 
-namespace Shared {
-    class PrimeChecker
+namespace Dynamic {
+    class WorkQueue
     {
         private:
-            int _counter;
-            std::mutex _counterMutex;
-            PrimeChecker();
+            std::queue<std::tuple<int, int>> _workQueue;
+            std::mutex _mutex;
 
         public:
-            static auto getInstance() -> PrimeChecker &;
+            WorkQueue() = default;
+            ~WorkQueue() = default;
 
-            PrimeChecker(const PrimeChecker &) = delete;
-            PrimeChecker(PrimeChecker &&) = delete;
-            auto operator=(const PrimeChecker &) -> PrimeChecker & = delete;
-            auto operator=(PrimeChecker &&) -> PrimeChecker & = delete;
+            WorkQueue(const WorkQueue &) = delete;
+            WorkQueue(WorkQueue &&) noexcept = delete;
+            auto operator=(const WorkQueue &) -> WorkQueue & = delete;
+            auto operator=(WorkQueue &&) noexcept -> WorkQueue & = delete;
 
-            ~PrimeChecker() = default;
-
-            auto incrementCounter(int &aToAdd) -> void;
-            [[nodiscard]] auto getCounter() const -> int;
-
-            // Function to check if a number is prime
-            static auto isPrime(int aNumber) -> bool;
+            void push(std::tuple<int, int> range);
+            bool pop(std::tuple<int, int> &range);
     };
-} // namespace Shared
+} // namespace Dynamic

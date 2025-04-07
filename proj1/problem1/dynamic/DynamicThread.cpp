@@ -1,7 +1,7 @@
 /*
-** File: StaticBlockThread.cpp                                                 *
-** Project: static_block                                                       *
-** Created Date: We Apr 2025                                                   *
+** File: DynamicThread.cpp                                                *
+** Project: Dynamic                                                      *
+** Created Date: Th Apr 2025                                                   *
 ** Author: GlassAlo                                                            *
 ** Email: ofourpatat@gmail.com                                                 *
 ** -----                                                                       *
@@ -17,30 +17,32 @@
 ** ----------	---	---------------------------------------------------------  *
 */
 
-#include "StaticBlockThread.hpp"
+#include "DynamicThread.hpp"
 #include <syncstream>
 #include "PrimeChecker.hpp"
 
-namespace StaticBlock {
-    StaticBlockThread::StaticBlockThread(int idx, std::tuple<int, int> &aArgs)
-        : Shared::Thread(idx)
-    {
-        auto tmp = std::move(aArgs);
+namespace Dynamic {
+    DynamicThread::DynamicThread(int idx, WorkQueue &workQueue)
+        : Shared::Thread(idx),
+          _workQueue(workQueue)
+    {}
 
-        _startNbr = std::get<0>(tmp);
-        _endNbr = std::get<1>(tmp);
-    }
-
-    void StaticBlockThread::run()
+    void DynamicThread::run()
     {
         _clock.start();
 
         Shared::PrimeChecker &primeChecker = Shared::PrimeChecker::getInstance();
         int counter = 0;
+        std::tuple<int, int> range;
 
-        for (int i = _startNbr; i <= _endNbr; i++) {
-            if (primeChecker.isPrime(i)) {
-                counter++;
+        while (_workQueue.get().pop(range)) {
+            int startNbr = std::get<0>(range);
+            int endNbr = std::get<1>(range);
+
+            for (int i = startNbr; i <= endNbr; i++) {
+                if (primeChecker.isPrime(i)) {
+                    counter++;
+                }
             }
         }
 
@@ -51,5 +53,4 @@ namespace StaticBlock {
         std::osyncstream(std::cout) << "Thread " << _idx << " Execution Time: " << elapsedTimeInMs << " ms"
                                     << "\n";
     }
-
-} // namespace StaticBlock
+} // namespace Dynamic

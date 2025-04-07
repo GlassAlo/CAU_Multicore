@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Wed Apr 02 2025                                              *
+** Last Modified: Thu Apr 03 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -30,15 +30,12 @@ namespace Shared {
         return instance;              // Instantiated on first use
     }
 
-    auto PrimeChecker::incrementCounter(int &aToAdd) -> bool
+    auto PrimeChecker::incrementCounter(int &aToAdd) -> void
     {
-        if (_counterMutex.try_lock()) {
-            _counter += aToAdd;
-            aToAdd = 0; // Reset the value to 0 after adding it to the counter
-            _counterMutex.unlock();
-            return true; // Successfully incremented
-        }
-        return false; // Failed to increment
+        std::lock_guard<std::mutex> lock(_counterMutex);
+        _counter += aToAdd;
+        aToAdd = 0; // Reset the value to 0 after adding it to the counter
+        _counterMutex.unlock();
     }
 
     [[nodiscard]] auto PrimeChecker::getCounter() const -> int

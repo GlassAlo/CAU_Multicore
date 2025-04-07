@@ -27,6 +27,13 @@ namespace Shared {
     template<typename T>
     concept ThreadConcept = std::is_base_of_v<Thread, T>;
 
+    template<typename T>
+    concept ThreadContainerConcept = requires(T t) {
+        typename T::value_type;
+        std::begin(t);
+        std::end(t);
+    };
+
     template<ThreadConcept T>
     class ThreadPool
     {
@@ -41,19 +48,33 @@ namespace Shared {
             }
 
         public:
-            template<typename Container>
+            template<ThreadContainerConcept Container>
             explicit ThreadPool(int numThreads, Container &&argsContainer)
                 : _numThreads(numThreads)
             {
                 auto tmp = std::forward<Container>(argsContainer);
                 _threads.reserve(numThreads);
                 auto itx = std::begin(tmp);
+                auto size = std::distance(itx, std::end(tmp));
 
                 for (int i = 0; i < numThreads; ++i, itx++) {
                     if (itx == std::end(tmp)) {
                         throw std::runtime_error("Not enough arguments in container!");
                     }
+                    if (size == 1) {
+                        itx = std::begin(tmp);
+                    }
                     createOneThread(i, *itx);
+                }
+            }
+
+            template<typename... Args>
+            explicit ThreadPool(int numThreads, Args &&...args)
+                : _numThreads(numThreads)
+            {
+                _threads.reserve(numThreads);
+                for (int i = 0; i < numThreads; ++i) {
+                    createOneThread(i, std::forward<Args>(args)...);
                 }
             }
 
