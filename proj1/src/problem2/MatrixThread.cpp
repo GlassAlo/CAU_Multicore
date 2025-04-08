@@ -1,13 +1,13 @@
 /*
-** File: StaticCyclicThread.cpp                                                *
-** Project: static_cyclic                                                      *
-** Created Date: Th Apr 2025                                                   *
+** File: MatrixThread.cpp                                                      *
+** Project: problem2                                                           *
+** Created Date: Tu Apr 2025                                                   *
 ** Author: GlassAlo                                                            *
 ** Email: ofourpatat@gmail.com                                                 *
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Thu Apr 03 2025                                              *
+** Last Modified: Wed Apr 09 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -17,36 +17,35 @@
 ** ----------	---	---------------------------------------------------------  *
 */
 
-#include "StaticCyclicThread.hpp"
+#include "MatrixThread.hpp"
 #include <syncstream>
-#include "PrimeChecker.hpp"
+#include "Matrix.hpp"
 
-namespace StaticCyclic {
-    StaticCyclicThread::StaticCyclicThread(int idx, std::vector<std::tuple<int, int>> &aArgs)
+namespace MatrixMultiplier {
+    MatrixThread::MatrixThread(int idx, rangesAndMatrices &aArgs)
         : Shared::Thread(idx),
-          _ranges(std::move(aArgs))
+          _ranges(std::move(aArgs.first)),
+          _firstMatrix(std::get<0>(aArgs.second)),
+          _secondMatrix(std::get<1>(aArgs.second))
     {}
 
-    void StaticCyclicThread::run()
+    void MatrixThread::run()
     {
+        Matrix &resultMatrix = Matrix::getResultMatrix();
+
         _clock.start();
-
-        Shared::PrimeChecker &primeChecker = Shared::PrimeChecker::getInstance();
-        int counter = 0;
-
-        for (const auto &[startNbr, endNbr] : _ranges) {
-            for (int i = startNbr; i <= endNbr; i++) {
-                if (primeChecker.isPrime(i)) {
-                    counter++;
+        for (const auto &[startRow, endRow] : _ranges) {
+            for (int i = startRow; i < endRow; ++i) {
+                for (int j = 0; j < _secondMatrix.getCols(); ++j) {
+                    for (int k = 0; k < _firstMatrix.getCols(); ++k) {
+                        resultMatrix.at(i, j) += _firstMatrix.at(i, k) * _secondMatrix.at(k, j);
+                    }
                 }
             }
         }
-
-        primeChecker.incrementCounter(counter);
-
         auto elapsedTimeInMs = _clock.getElapsedTime();
 
         std::osyncstream(std::cout) << "Thread " << _idx << " Execution Time: " << elapsedTimeInMs << " ms"
                                     << "\n";
     }
-} // namespace StaticCyclic
+} // namespace MatrixMultiplier

@@ -1,5 +1,5 @@
--- Create the problem1-dynamic project
-target("problem1-dynamic")
+-- Create the MatmultD project
+target("MatmultD")
 
     -- Set the project kind to binary
     set_kind("binary")

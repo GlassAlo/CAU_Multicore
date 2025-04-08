@@ -1,7 +1,7 @@
-set_project("problem1-static-block")
-set_project("problem1-static-cyclic")
-set_project("problem1-dynamic")
-set_project("problem2")
+set_project("pc_static_block")
+set_project("pc_static_cyclic")
+set_project("pc_dynamic")
+set_project("MatmultD")
 
 if is_os("windows") then
     add_toolchains("msvc")
@@ -12,5 +12,4 @@ end
 set_languages("cxx23")
 add_rules("mode.debug", "mode.release")
 
-includes("problem1")
-includes("problem2")
+includes("src")

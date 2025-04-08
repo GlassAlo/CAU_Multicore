@@ -1,21 +1,21 @@
--- Create the problem1-static-cyclic project
-target("problem1-static-cyclic")
+-- Create the pc_static_block project
+target("pc_static_block")
 
     -- Set the project kind to binary
     set_kind("binary")
 
     -- Add the source files
     add_files("**.cpp")
-    add_files("../Shared/**.cpp")
+    add_files("../../Shared/**.cpp")
 
-    add_includedirs("../Shared")
-    add_headerfiles("../Shared/*.h**")
+    add_includedirs("../../Shared")
+    add_headerfiles("../../Shared/*.h**")
 
     -- Add the -std=c++23 flag
     add_cxxflags("-std=c++23", "-lstdc++")
 
     -- Set the target directory to bin/tests
-    set_targetdir("../../bin")
+    set_targetdir("../../../bin")
 
     -- Set the warnings to all (-Wall)
     set_warnings("allextra", "pedantic", "more")
