@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Wed Apr 02 2025                                              *
+** Last Modified: Wed Apr 09 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <thread>
 #include "Clock.hpp"
 
