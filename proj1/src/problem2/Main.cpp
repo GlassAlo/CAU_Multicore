@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Wed Apr 09 2025                                              *
+** Last Modified: Tue Apr 15 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
     std::cout << "Sum of the result matrix: " << resultMatrix.getSum() << "\n";
 
     std::cout << "[thread_no]:" << std::setw(2) << thread_no << " , [Time]:" << std::setw(4) << duration << " ms\n";
+    std::cout << "Performance 1/exec time = " << 1 / duration << "\n";
 
     return 0;
 }

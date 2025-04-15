@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Wed Apr 09 2025                                              *
+** Last Modified: Tue Apr 15 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -44,8 +44,8 @@ namespace MatrixMultiplier {
         for (int i = 0; i < _nbrThreads; i++) {
             int endRow = startRow + rowsPerThread + (i < remainingRows ? 1 : 0);
 
-            threadsRanges[i % _nbrThreads].first.emplace_back(startRow, endRow);
-            threadsRanges[i % _nbrThreads].second = std::make_tuple(*this, aMatrix);
+            threadsRanges[i].first.emplace_back(startRow, endRow);
+            threadsRanges[i].second = std::make_tuple(*this, aMatrix);
             startRow = endRow;
         }
 
