@@ -112,3 +112,5 @@ xmake f -m release && xmake -y &&
 - The end number was set to 1000000.
 - The performance (1 / exec time) was multiplied by 10000 to have a better view of the evolution of the performance.
 
+#### Performance Chart
+![Prime Number Checker Performance](https://github.com/GlassAlo/CAU_Multicore/blob/main/proj1/doc/proj1.jpg)
