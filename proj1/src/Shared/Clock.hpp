@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Wed Apr 09 2025                                              *
+** Last Modified: Tue Apr 15 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -25,7 +25,7 @@ namespace Shared {
     class Clock
     {
         protected:
-            std::chrono::high_resolution_clock::time_point _startTime;
+            std::chrono::time_point<std::chrono::high_resolution_clock> _startTime;
 
         public:
 #pragma region constructor/destructor
@@ -46,7 +46,7 @@ namespace Shared {
              *
              * @return the time elapsed since the last call to restart
              */
-            [[nodiscard]] auto getElapsedTime() const -> long;
+            [[nodiscard]] auto getElapsedTime() const -> double;
 
             /**
              * @brief Start the clock

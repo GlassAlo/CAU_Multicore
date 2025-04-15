@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Thu Apr 03 2025                                              *
+** Last Modified: Tue Apr 15 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -38,8 +38,8 @@ int main(const int argc, const char **argv)
     std::vector<std::tuple<int, int>> threadsRanges;
 
     if (argc == 3) {
-        NUM_END = atoi(argv[1]);
-        NUM_THREADS = atoi(argv[2]);
+        NUM_THREADS = atoi(argv[1]);
+        NUM_END = atoi(argv[2]);
     }
 
     int range = NUM_END / NUM_THREADS;
@@ -61,5 +61,5 @@ int main(const int argc, const char **argv)
     std::cout << "Program Execution Time: " << elapsedTimeInMs << " ms" << "\n";
     std::cout << "1..." << NUM_END - 1 << " prime number counter= " << Shared::PrimeChecker::getInstance().getCounter()
               << "\n";
-    std::cout << "Performance: 1/execution time = " << 1 / elapsedTimeInMs << "\n";
+    std::cout << "Performance: 1/execution time = " << (1 / elapsedTimeInMs) * 10000 << "\n";
 }

@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Wed Apr 09 2025                                              *
+** Last Modified: Tue Apr 15 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -20,7 +20,7 @@
 #include "Clock.hpp"
 
 namespace Shared {
-    auto Clock::getElapsedTime() const -> long
+    auto Clock::getElapsedTime() const -> double
     {
         auto endTime = std::chrono::high_resolution_clock::now();
         auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - _startTime);
