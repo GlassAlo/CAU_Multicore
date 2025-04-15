@@ -160,7 +160,7 @@ This means that higher values indicate better performance.
 - The matrix size was set to 1000x1000.
 
 ##### 📊 Performance Chart
-![Matrix Multiplication Performance](https://raw.githubusercontent.com/GlassAlo/CAU_Multicore/main/doc/proj2.png)
+![Matrix Multiplication Performance](https://github.com/GlassAlo/CAU_Multicore/blob/main/proj1/doc/proj2.jpg?raw=true)
 
 ##### 🧠 Interpretation of Results
 - Static block decomposition divides the matrix into contiguous row blocks per thread. This is easy to implement and efficient when all rows take similar time to process.
