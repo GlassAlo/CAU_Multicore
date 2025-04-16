@@ -18,6 +18,10 @@
             - [🧠 Interpretation](#interpretation)
             - [🏁 Conclusion](#conclusion)
         - [Matrix multiplication](#matrix-multiplication)
+            - [🧪 Experiment Setup](#experiment-setup-1)
+            - [📊 Performance Chart](#performance-chart-1)
+            - [🧠 Interpretation of Results](#interpretation-of-results)
+            - [🏁 Conclusio](#conclusio)
 
 ## Introduction
 This project was written in C++ because it's a language that I affectionate and I am familiar with. It includes an architecture made to be extensible and easy to maintain while reusing as much code as possible.

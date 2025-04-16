@@ -15,13 +15,15 @@ target("pc_static_cyclic")
     add_cxxflags("-std=c++23", "-lstdc++")
 
     -- Set the target directory to bin/tests
-    set_targetdir("../../../bin")
+    set_targetdir("../../bin")
 
     -- Set the warnings to all (-Wall)
     set_warnings("allextra", "pedantic", "more")
 
     -- Add the system libraries for threading
-    add_syslinks("pthread")
+    if is_plat("linux", "macosx") then
+    add_links("pthread")
+end
 
     -- Set the build modes
     -- If the mode is debug, set the optimization to none and the symbols to debug
