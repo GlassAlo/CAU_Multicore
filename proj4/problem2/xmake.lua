@@ -1,11 +1,11 @@
 -- Create the project
-target("openmp_ray")
+target("openmp_int")
 
     -- Set the project kind to binary
     set_kind("binary")
 
     -- Add the source files
-    add_files("openmp_ray.cpp")
+    add_files("omp_pi_one.c")
 
     -- Add the -std=c++23 flag
     add_cxxflags("-std=c++23", "-lstdc++")
@@ -45,13 +45,13 @@ target("openmp_ray")
     add_defines("_CRT_SECURE_NO_WARNINGS")
 
 -- Create the project
-target("cuda_ray")
+target("thrust_integral")
 
     -- Set the project kind to binary
     set_kind("binary")
 
     -- Add the source files
-    add_files("cuda_ray.cu")
+    add_files("thrust_ex.cu")
 
     -- Add the -std=c++23 flag
     add_cxxflags("-std=c++23", "-lstdc++")
@@ -70,7 +70,6 @@ target("cuda_ray")
     -- Enable CUDA support
     add_rules("cuda")
     add_cugencodes("native")
-    add_cuflags("-std=c++23")
 
     -- Set the build modes
     -- If the mode is debug, set the optimization to none and the symbols to debug

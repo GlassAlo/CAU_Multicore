@@ -1,4 +1,4 @@
-Language: Cpp
+Language: Cpp, CUDA, Cu
 ColumnLimit: 120
 ReflowComments: true
 AlignAfterOpenBracket: Align

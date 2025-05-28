@@ -70,7 +70,6 @@ target("cuda_ray")
     -- Enable CUDA support
     add_rules("cuda")
     add_cugencodes("native")
-    add_cuflags("-std=c++23")
 
     -- Set the build modes
     -- If the mode is debug, set the optimization to none and the symbols to debug
