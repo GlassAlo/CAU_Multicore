@@ -51,7 +51,7 @@ target("cuda_ray")
     set_kind("binary")
 
     -- Add the source files
-    add_files("cuda_ray.cpp")
+    add_files("cuda_ray.cu")
 
     -- Add the -std=c++23 flag
     add_cxxflags("-std=c++23", "-lstdc++")
