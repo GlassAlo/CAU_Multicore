@@ -1,40 +1,44 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <cuda_runtime.h>
 #include <time.h>
+#include <cuda_runtime.h>
 
 #define SPHERES 20
 #define INF     2e10f
 #define DIM     2048
 #define rnd(x)  (x * rand() / RAND_MAX)
 
-struct Sphere {
-    float r, g, b;
-    float radius;
-    float x, y, z;
+struct Sphere
+{
+        float r, g, b;
+        float radius;
+        float x, y, z;
 
-    __device__ float hit(float ox, float oy, float* n) const {
-        float dx = ox - x;
-        float dy = oy - y;
-        float rr = radius * radius;
-        float d2 = dx * dx + dy * dy;
-        if (d2 < rr) {
-            float dz = sqrtf(rr - d2);
-            *n = dz / radius;
-            return dz + z;
+        __device__ float hit(float ox, float oy, float *n) const
+        {
+            float dx = ox - x;
+            float dy = oy - y;
+            float rr = radius * radius;
+            float d2 = dx * dx + dy * dy;
+            if (d2 < rr) {
+                float dz = sqrtf(rr - d2);
+                *n = dz / radius;
+                return dz + z;
+            }
+            return -INF;
         }
-        return -INF;
-    }
 };
 
 // Move spheres to constant memory for faster cached access
 __constant__ Sphere d_spheres[SPHERES];
 
-__global__ void render_kernel(unsigned char* ptr) {
+__global__ void render_kernel(unsigned char *ptr)
+{
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
-    if (x >= DIM || y >= DIM) return;
+    if (x >= DIM || y >= DIM)
+        return;
 
     int offset = x + y * DIM;
     float ox = x - DIM * 0.5f;
@@ -55,13 +59,14 @@ __global__ void render_kernel(unsigned char* ptr) {
     }
 
     // Use __saturatef to clamp color values and avoid branching
-    ptr[offset * 4 + 0] = (unsigned char)(__saturatef(r) * 255.0f);
-    ptr[offset * 4 + 1] = (unsigned char)(__saturatef(g) * 255.0f);
-    ptr[offset * 4 + 2] = (unsigned char)(__saturatef(b) * 255.0f);
+    ptr[offset * 4 + 0] = (unsigned char) (__saturatef(r) * 255.0f);
+    ptr[offset * 4 + 1] = (unsigned char) (__saturatef(g) * 255.0f);
+    ptr[offset * 4 + 2] = (unsigned char) (__saturatef(b) * 255.0f);
     ptr[offset * 4 + 3] = 255;
 }
 
-void ppm_write(const unsigned char* bitmap, int xdim, int ydim, FILE* fp) {
+void ppm_write(const unsigned char *bitmap, int xdim, int ydim, FILE *fp)
+{
     fprintf(fp, "P3\n%d %d\n255\n", xdim, ydim);
     for (int y = 0; y < ydim; y++) {
         for (int x = 0; x < xdim; x++) {
@@ -72,7 +77,8 @@ void ppm_write(const unsigned char* bitmap, int xdim, int ydim, FILE* fp) {
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[])
+{
     char *filename = "result.ppm";
     if (argc > 1) {
         filename = argv[1];
@@ -96,9 +102,9 @@ int main(int argc, char* argv[]) {
     unsigned char *bitmap_h = nullptr;
     unsigned char *bitmap_d = nullptr;
     // Allocate device memory for image buffer
-    cudaMalloc((void**)&bitmap_d, DIM * DIM * 4);
+    cudaMalloc((void **) &bitmap_d, DIM * DIM * 4);
     // Allocate pinned (page-locked) host memory for image buffer
-    cudaMallocHost((void**)&bitmap_h, DIM * DIM * 4);
+    cudaMallocHost((void **) &bitmap_h, DIM * DIM * 4);
 
     // Use 16x16 threads per block (256 threads)
     dim3 threads(16, 16);
@@ -118,7 +124,7 @@ int main(int argc, char* argv[]) {
     // Copy rendered image from device to host
     cudaMemcpy(bitmap_h, bitmap_d, DIM * DIM * 4, cudaMemcpyDeviceToHost);
 
-    FILE* fp = fopen(filename, "w");
+    FILE *fp = fopen(filename, "w");
     if (fp) {
         ppm_write(bitmap_h, DIM, DIM, fp);
         fclose(fp);

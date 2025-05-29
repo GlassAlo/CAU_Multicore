@@ -7,7 +7,7 @@
 ** -----                                                                       *
 ** Description: {Enter a description for the file}                             *
 ** -----                                                                       *
-** Last Modified: Wed May 28 2025                                              *
+** Last Modified: Thu May 29 2025                                              *
 ** Modified By: GlassAlo                                                       *
 ** -----                                                                       *
 ** Copyright (c) 2025 Aurea-Games                                              *
@@ -61,6 +61,9 @@ void kernel(int x, int y, Sphere *s, unsigned char *ptr)
 
     float r = 0, g = 0, b = 0;
     float maxz = -INF;
+    // using schedule(dynamic) to allow dynamic load balancing among threads
+    // This is particularly useful when the workload is unevenly distributed across iterations.
+    // The parallel for loop iterates over the spheres, checking for hits with the ray.
 #pragma omp parallel for schedule(dynamic)
     for (int i = 0; i < SPHERES; i++) {
         float n;
@@ -104,6 +107,10 @@ int main(int argc, char *argv[])
 
     srand(time(NULL));
     std::string filename = "result.ppm";
+    if (argc < 2 || argc > 3) {
+        printf("Usage: %s <no_threads> [<filename>]\n", argv[0]);
+        return 1;
+    }
 
     no_threads = atoi(argv[1]);
     omp_set_num_threads(no_threads);
@@ -126,6 +133,10 @@ int main(int argc, char *argv[])
     bitmap = (unsigned char *) malloc(sizeof(unsigned char) * DIM * DIM * 4);
     double start_time = omp_get_wtime();
 
+    // The collapse(2) clause allows the two nested loops to be treated as a single loop,
+    // enabling better load balancing across threads.
+    // The schedule(dynamic) clause allows the iterations to be distributed dynamically among the threads,
+    // which can help improve performance for workloads with varying execution times.
 #pragma omp parallel for collapse(2) schedule(dynamic)
     for (x = 0; x < DIM; x++)
         for (y = 0; y < DIM; y++)
